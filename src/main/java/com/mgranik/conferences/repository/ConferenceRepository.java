@@ -6,4 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ConferenceRepository extends CrudRepository<Conference, Integer> {
+
+    boolean existsByName(String name);
+
 }
