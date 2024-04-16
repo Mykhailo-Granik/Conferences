@@ -2,7 +2,7 @@ package com.mgranik.conferences.controllers;
 
 import com.mgranik.conferences.dto.ConferenceDTO;
 import com.mgranik.conferences.entity.Conference;
-import com.mgranik.conferences.repository.ConferenceRepository;
+import com.mgranik.conferences.service.ConferenceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class ConferenceController {
 
-    private final ConferenceRepository conferenceRepository;
+    private final ConferenceService conferenceService;
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public Conference createConference(@RequestBody ConferenceDTO conference) {
-        return conferenceRepository.save(Conference.fromDTO(conference));
+        return conferenceService.createConference(conference);
     }
 
 }
