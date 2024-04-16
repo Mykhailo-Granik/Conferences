@@ -34,4 +34,9 @@ public class Conference {
         return conference;
     }
 
+    public boolean intersects(Conference other) {
+        long leftIntersection = Math.min(this.end.toEpochSecond(), other.end.toEpochSecond());
+        long rightIntersection = Math.max(this.start.toEpochSecond(), other.start.toEpochSecond());
+        return leftIntersection > rightIntersection;
+    }
 }
