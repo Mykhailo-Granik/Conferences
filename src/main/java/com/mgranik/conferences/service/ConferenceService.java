@@ -3,6 +3,7 @@ package com.mgranik.conferences.service;
 import com.mgranik.conferences.dto.ConferenceDTO;
 import com.mgranik.conferences.entity.Conference;
 import com.mgranik.conferences.exception.ConferenceAlreadyExistsException;
+import com.mgranik.conferences.exception.ConferenceNotFoundException;
 import com.mgranik.conferences.exception.ConferencesShouldNotIntersectException;
 import com.mgranik.conferences.repository.ConferenceRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,12 +32,24 @@ public class ConferenceService {
 
     private boolean intersectsWithExistingConferences(Conference conference) {
         return StreamSupport.stream(conferenceRepository.findAll().spliterator(), false)
+                .filter(otherConference -> !otherConference.getId().equals(conference.getId()))
                 .anyMatch(existingConference -> existingConference.intersects(conference));
     }
 
     public List<Conference> findAllConferences() {
         return StreamSupport.stream(conferenceRepository.findAll().spliterator(), false)
                 .toList();
+    }
+
+    public Conference updateConference(ConferenceDTO conferenceDTO, Integer id) {
+        conferenceRepository.findById(id)
+                .orElseThrow(() -> new ConferenceNotFoundException(id));
+        Conference newConference = Conference.fromDTO(conferenceDTO);
+        newConference.setId(id);
+        if (intersectsWithExistingConferences(newConference)) {
+            throw new ConferencesShouldNotIntersectException();
+        }
+        return conferenceRepository.save(newConference);
     }
 
 }

@@ -27,4 +27,9 @@ public class ConferenceController {
         return conferenceService.findAllConferences();
     }
 
+    @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Conference updateConference(@RequestBody @Valid ConferenceDTO conference, @PathVariable Integer id) {
+        return conferenceService.updateConference(conference, id);
+    }
+
 }
