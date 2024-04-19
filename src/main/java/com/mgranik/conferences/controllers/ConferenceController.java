@@ -6,10 +6,9 @@ import com.mgranik.conferences.service.ConferenceService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/conferences")
@@ -21,6 +20,11 @@ public class ConferenceController {
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public Conference createConference(@RequestBody @Valid ConferenceDTO conference) {
         return conferenceService.createConference(conference);
+    }
+
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Conference> findAllConferences() {
+        return conferenceService.findAllConferences();
     }
 
 }

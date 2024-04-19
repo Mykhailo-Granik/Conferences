@@ -8,6 +8,8 @@ import com.mgranik.conferences.repository.ConferenceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.StreamSupport;
 
 @Service
@@ -30,6 +32,11 @@ public class ConferenceService {
     private boolean intersectsWithExistingConferences(Conference conference) {
         return StreamSupport.stream(conferenceRepository.findAll().spliterator(), false)
                 .anyMatch(existingConference -> existingConference.intersects(conference));
+    }
+
+    public List<Conference> findAllConferences() {
+        return StreamSupport.stream(conferenceRepository.findAll().spliterator(), false)
+                .toList();
     }
 
 }
