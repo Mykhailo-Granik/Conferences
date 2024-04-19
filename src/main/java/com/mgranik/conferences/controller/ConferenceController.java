@@ -1,4 +1,4 @@
-package com.mgranik.conferences.controllers;
+package com.mgranik.conferences.controller;
 
 import com.mgranik.conferences.dto.ConferenceDTO;
 import com.mgranik.conferences.entity.Conference;
