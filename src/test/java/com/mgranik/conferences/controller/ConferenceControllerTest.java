@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.ZonedDateTime;
 
+import static com.mgranik.conferences.tools.ZonedDateTimeMatcher.matchesZonedDateTime;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -49,6 +50,8 @@ class ConferenceControllerTest {
                         .content(objectMapper.writeValueAsString(conferenceDTO)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value(conference.getName()))
+                .andExpect(jsonPath("$.start", matchesZonedDateTime(conference.getStart())))
+                .andExpect(jsonPath("$.end", matchesZonedDateTime(conference.getEnd())))
                 .andExpect(jsonPath("$.topic").value(conference.getTopic()))
                 .andExpect(jsonPath("$.participantsCount").value(conference.getParticipantsCount()));
 
