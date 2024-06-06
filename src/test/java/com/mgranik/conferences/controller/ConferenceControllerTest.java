@@ -44,8 +44,8 @@ class ConferenceControllerTest {
                         .content(objectMapper.writeValueAsString(conferenceDTO())))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value(conference.getName()))
-                .andExpect(jsonPath("$.start", matchesZonedDateTime(conference.getStart())))
-                .andExpect(jsonPath("$.end", matchesZonedDateTime(conference.getEnd())))
+                .andExpect(jsonPath("$.start", matchesZonedDateTime(conference.getStartDateTime())))
+                .andExpect(jsonPath("$.end", matchesZonedDateTime(conference.getEndDateTime())))
                 .andExpect(jsonPath("$.topic").value(conference.getTopic()))
                 .andExpect(jsonPath("$.participantsCount").value(conference.getParticipantsCount()));
 
@@ -68,8 +68,8 @@ class ConferenceControllerTest {
         mockMvc.perform(get("/conferences"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].name").value(conferences.get(0).getName()))
-                .andExpect(jsonPath("$[0].start", matchesZonedDateTime(conferences.get(0).getStart())))
-                .andExpect(jsonPath("$[0].end", matchesZonedDateTime(conferences.get(0).getEnd())))
+                .andExpect(jsonPath("$[0].start", matchesZonedDateTime(conferences.get(0).getStartDateTime())))
+                .andExpect(jsonPath("$[0].end", matchesZonedDateTime(conferences.get(0).getEndDateTime())))
                 .andExpect(jsonPath("$[0].topic").value(conferences.get(0).getTopic()))
                 .andExpect(jsonPath("$[0].participantsCount").value(conferences.get(0).getParticipantsCount()));
 
@@ -84,8 +84,8 @@ class ConferenceControllerTest {
                         .content(objectMapper.writeValueAsString(conferenceDTO())))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value(conference.getName()))
-                .andExpect(jsonPath("$.start", matchesZonedDateTime(conference.getStart())))
-                .andExpect(jsonPath("$.end", matchesZonedDateTime(conference.getEnd())))
+                .andExpect(jsonPath("$.start", matchesZonedDateTime(conference.getStartDateTime())))
+                .andExpect(jsonPath("$.end", matchesZonedDateTime(conference.getEndDateTime())))
                 .andExpect(jsonPath("$.topic").value(conference.getTopic()))
                 .andExpect(jsonPath("$.participantsCount").value(conference.getParticipantsCount()));
     }

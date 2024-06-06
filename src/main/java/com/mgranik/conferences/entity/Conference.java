@@ -20,23 +20,23 @@ public class Conference {
 
     private String name;
     private String topic;
-    private ZonedDateTime start;
-    private ZonedDateTime end;
+    private ZonedDateTime startDateTime;
+    private ZonedDateTime endDateTime;
     private int participantsCount;
 
     public static Conference fromDTO(ConferenceDTO conferenceDTO) {
         Conference conference = new Conference();
         conference.setName(conferenceDTO.name());
         conference.setTopic(conferenceDTO.topic());
-        conference.setStart(conferenceDTO.start());
-        conference.setEnd(conferenceDTO.end());
+        conference.setStartDateTime(conferenceDTO.start());
+        conference.setEndDateTime(conferenceDTO.end());
         conference.setParticipantsCount(conferenceDTO.participantsCount());
         return conference;
     }
 
     public boolean intersects(Conference other) {
-        long leftIntersection = Math.min(this.end.toEpochSecond(), other.end.toEpochSecond());
-        long rightIntersection = Math.max(this.start.toEpochSecond(), other.start.toEpochSecond());
+        long leftIntersection = Math.min(this.endDateTime.toEpochSecond(), other.endDateTime.toEpochSecond());
+        long rightIntersection = Math.max(this.startDateTime.toEpochSecond(), other.startDateTime.toEpochSecond());
         return leftIntersection > rightIntersection;
     }
 }
