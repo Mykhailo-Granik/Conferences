@@ -31,8 +31,15 @@ public class ConferenceService {
 
     private boolean intersectsWithExistingConferences(Conference conference) {
         return StreamSupport.stream(conferenceRepository.findAll().spliterator(), false)
-                .filter(otherConference -> !otherConference.getId().equals(conference.getId()))
+                .filter(otherConference -> hasDifferentId(conference, otherConference))
                 .anyMatch(existingConference -> existingConference.intersects(conference));
+    }
+
+    private boolean hasDifferentId(Conference conference, Conference otherConference) {
+        if (conference.getId() == null) {
+            return true;
+        }
+        return !otherConference.getId().equals(conference.getId());
     }
 
     public List<Conference> findAllConferences() {

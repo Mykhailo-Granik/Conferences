@@ -14,7 +14,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.ZonedDateTime;
 import java.util.List;
 
+import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -64,6 +67,15 @@ public class ConferenceServiceTest {
                         conference(ZonedDateTime.now().minusDays(1), ZonedDateTime.now().plusDays(1))
                 )
         );
+    }
+
+    @Test
+    public void whenBusinessLogicRulesAreMetShouldCreateConference() {
+        when(conferenceRepository.existsByName(CONFERENCE_NAME)).thenReturn(false);
+        when(conferenceRepository.findAll()).thenReturn(emptyList());
+        ConferenceDTO conference = conference(ZonedDateTime.now().plusDays(1), ZonedDateTime.now().plusDays(2));
+        underTest.createConference(conference);
+        verify(conferenceRepository).save(any());
     }
 
 }
