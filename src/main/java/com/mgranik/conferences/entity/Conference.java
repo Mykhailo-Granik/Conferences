@@ -34,6 +34,12 @@ public class Conference {
         return conference;
     }
 
+    public static Conference fromDTO(ConferenceDTO conferenceDTO, Integer id) {
+        Conference conference = fromDTO(conferenceDTO);
+        conference.setId(id);
+        return conference;
+    }
+
     public boolean intersects(Conference other) {
         long leftIntersection = Math.min(this.endDateTime.toEpochSecond(), other.endDateTime.toEpochSecond());
         long rightIntersection = Math.max(this.startDateTime.toEpochSecond(), other.startDateTime.toEpochSecond());

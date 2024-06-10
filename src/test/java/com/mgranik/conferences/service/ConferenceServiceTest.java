@@ -3,6 +3,7 @@ package com.mgranik.conferences.service;
 import com.mgranik.conferences.dto.ConferenceDTO;
 import com.mgranik.conferences.entity.Conference;
 import com.mgranik.conferences.exception.ConferenceAlreadyExistsException;
+import com.mgranik.conferences.exception.ConferenceNotFoundException;
 import com.mgranik.conferences.exception.ConferencesShouldNotIntersectException;
 import com.mgranik.conferences.repository.ConferenceRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -75,6 +77,58 @@ public class ConferenceServiceTest {
         when(conferenceRepository.findAll()).thenReturn(emptyList());
         ConferenceDTO conference = conference(ZonedDateTime.now().plusDays(1), ZonedDateTime.now().plusDays(2));
         underTest.createConference(conference);
+        verify(conferenceRepository).save(any());
+    }
+
+    @Test
+    public void shouldFindAllConferences() {
+        underTest.findAllConferences();
+        verify(conferenceRepository).findAll();
+    }
+
+    @Test
+    public void whenConferenceIsNotFoundAndUpdateIsCalledShouldThrowException() {
+        when(conferenceRepository.findById(1)).thenReturn(Optional.empty());
+        assertThrows(ConferenceNotFoundException.class, () ->
+                underTest.updateConference(
+                        conference(ZonedDateTime.now().plusDays(1), ZonedDateTime.now().plusDays(2)),
+                        1
+                )
+        );
+    }
+
+    @Test
+    public void whenConferenceDatesIntersectOnUpdateShouldThrowException() {
+        ConferenceDTO conferenceToUpdate = conference(ZonedDateTime.now().plusDays(1), ZonedDateTime.now().plusDays(2));
+        ConferenceDTO otherConference = conference(ZonedDateTime.now().plusDays(3), ZonedDateTime.now().plusDays(4));
+        when(conferenceRepository.findById(1)).thenReturn(Optional.of(
+                Conference.fromDTO(conferenceToUpdate)
+        ));
+        when(conferenceRepository.findAll()).thenReturn(
+                List.of(
+                        Conference.fromDTO(conferenceToUpdate, 1),
+                        Conference.fromDTO(otherConference, 2)
+                )
+        );
+        assertThrows(ConferencesShouldNotIntersectException.class, () ->
+                underTest.updateConference(
+                        conference(ZonedDateTime.now().plusDays(1), ZonedDateTime.now().plusDays(5)),
+                        1
+                )
+        );
+    }
+
+    @Test
+    public void whenBusinessLogicRulesAreMetShouldUpdateConference() {
+        ConferenceDTO conferenceToUpdate = conference(ZonedDateTime.now().plusDays(1), ZonedDateTime.now().plusDays(2));
+        when(conferenceRepository.findById(1)).thenReturn(Optional.of(
+                Conference.fromDTO(conferenceToUpdate)
+        ));
+        when(conferenceRepository.findAll()).thenReturn(emptyList());
+        underTest.updateConference(
+                conference(ZonedDateTime.now().plusDays(1), ZonedDateTime.now().plusDays(5)),
+                1
+        );
         verify(conferenceRepository).save(any());
     }
 
