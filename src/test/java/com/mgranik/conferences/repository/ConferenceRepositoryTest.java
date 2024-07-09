@@ -66,4 +66,15 @@ class ConferenceRepositoryTest {
         assertFalse(conferenceRepository.findById(1).isPresent());
     }
 
+    @Test
+    public void shouldFindAllConferencesExceptWithSpecifiedIds() {
+        Conference conference1 = new ConferenceBuilder("Test Conference 1", "java").build();
+        Conference conference2 = new ConferenceBuilder("Test Conference 2", "java").build();
+        Conference savedConference1 = conferenceRepository.save(conference1);
+        Conference savedConference2 = conferenceRepository.save(conference2);
+        List<Conference> conferences = conferenceRepository.findByIdNot(savedConference1.getId());
+        assertEquals(1, conferences.size());
+        assertEquals(savedConference2.getId(), conferences.get(0).getId());
+    }
+
 }
