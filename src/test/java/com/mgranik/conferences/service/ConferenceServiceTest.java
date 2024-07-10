@@ -5,7 +5,7 @@ import com.mgranik.conferences.entity.Conference;
 import com.mgranik.conferences.exception.ConferenceAlreadyExistsException;
 import com.mgranik.conferences.exception.ConferenceNotFoundException;
 import com.mgranik.conferences.exception.ConferencesShouldNotIntersectException;
-import com.mgranik.conferences.repository.ConferenceRepository;
+import com.mgranik.conferences.persistence.ConferenceRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

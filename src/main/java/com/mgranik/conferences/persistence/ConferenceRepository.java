@@ -1,4 +1,4 @@
-package com.mgranik.conferences.repository;
+package com.mgranik.conferences.persistence;
 
 import com.mgranik.conferences.entity.Conference;
 import org.springframework.data.repository.CrudRepository;

@@ -1,4 +1,4 @@
-package com.mgranik.conferences.controller;
+package com.mgranik.conferences.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mgranik.conferences.dto.ConferenceDTO;
