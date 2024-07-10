@@ -2,7 +2,7 @@ package com.mgranik.conferences.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mgranik.conferences.dto.ConferenceDTO;
-import com.mgranik.conferences.entity.Conference;
+import com.mgranik.conferences.entity.ConferenceEntity;
 import com.mgranik.conferences.service.ConferenceService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +35,7 @@ class ConferenceControllerTest {
     @Test
     public void shouldCreateConference() throws Exception {
 
-        Conference conference = Conference.fromDTO(conferenceDTO());
+        ConferenceEntity conference = ConferenceEntity.fromDTO(conferenceDTO());
 
         given(conferenceService.createConference(any())).willReturn(conference);
 
@@ -63,7 +63,7 @@ class ConferenceControllerTest {
 
     @Test
     public void shouldReturnAListOfConferences() throws Exception {
-        List<Conference> conferences = List.of(Conference.fromDTO(conferenceDTO()));
+        List<ConferenceEntity> conferences = List.of(ConferenceEntity.fromDTO(conferenceDTO()));
         given(conferenceService.findAllConferences()).willReturn(conferences);
         mockMvc.perform(get("/conferences"))
                 .andExpect(status().isOk())
@@ -77,7 +77,7 @@ class ConferenceControllerTest {
 
     @Test
     public void shouldUpdateAConference() throws Exception {
-        Conference conference = Conference.fromDTO(conferenceDTO());
+        ConferenceEntity conference = ConferenceEntity.fromDTO(conferenceDTO());
         given(conferenceService.updateConference(any(), any())).willReturn(conference);
         mockMvc.perform(put("/conferences/1")
                         .contentType(MediaType.APPLICATION_JSON)

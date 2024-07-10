@@ -1,7 +1,8 @@
 package com.mgranik.conferences.service;
 
+import com.mgranik.conferences.core.persistence.PersistencePort;
 import com.mgranik.conferences.dto.ConferenceDTO;
-import com.mgranik.conferences.entity.Conference;
+import com.mgranik.conferences.entity.ConferenceEntity;
 import com.mgranik.conferences.exception.ConferenceAlreadyExistsException;
 import com.mgranik.conferences.exception.ConferenceNotFoundException;
 import com.mgranik.conferences.exception.ConferencesShouldNotIntersectException;
@@ -28,17 +29,19 @@ public class ConferenceServiceTest {
     public static final String CONFERENCE_NAME = "Java Conference";
     @Mock
     private ConferenceRepository conferenceRepository;
+    @Mock
+    private PersistencePort persistencePort;
 
     private ConferenceService underTest;
 
     @BeforeEach
     public void setUp() {
-        underTest = new ConferenceService(conferenceRepository);
+        underTest = new ConferenceService(conferenceRepository, persistencePort);
     }
 
     @Test
     public void whenConferenceWithSameNameExistsShouldThrowException() {
-        when(conferenceRepository.existsByName(CONFERENCE_NAME)).thenReturn(true);
+        when(persistencePort.existsByName(CONFERENCE_NAME)).thenReturn(true);
         assertThrows(ConferenceAlreadyExistsException.class, () ->
                 underTest.createConference(
                         conference(ZonedDateTime.now().minusDays(1), ZonedDateTime.now().plusDays(1))
@@ -58,10 +61,10 @@ public class ConferenceServiceTest {
 
     @Test
     public void whenConferenceDatesIntersectShouldThrowException() {
-        when(conferenceRepository.existsByName(CONFERENCE_NAME)).thenReturn(false);
+        when(persistencePort.existsByName(CONFERENCE_NAME)).thenReturn(false);
         when(conferenceRepository.findAll()).thenReturn(
                 List.of(
-                        Conference.fromDTO(conference(ZonedDateTime.now().minusDays(2), ZonedDateTime.now().plusDays(2)))
+                        ConferenceEntity.fromDTO(conference(ZonedDateTime.now().minusDays(2), ZonedDateTime.now().plusDays(2)))
                 )
         );
         assertThrows(ConferencesShouldNotIntersectException.class, () ->
@@ -73,7 +76,7 @@ public class ConferenceServiceTest {
 
     @Test
     public void whenBusinessLogicRulesAreMetShouldCreateConference() {
-        when(conferenceRepository.existsByName(CONFERENCE_NAME)).thenReturn(false);
+        when(persistencePort.existsByName(CONFERENCE_NAME)).thenReturn(false);
         when(conferenceRepository.findAll()).thenReturn(emptyList());
         ConferenceDTO conference = conference(ZonedDateTime.now().plusDays(1), ZonedDateTime.now().plusDays(2));
         underTest.createConference(conference);
@@ -102,12 +105,12 @@ public class ConferenceServiceTest {
         ConferenceDTO conferenceToUpdate = conference(ZonedDateTime.now().plusDays(1), ZonedDateTime.now().plusDays(2));
         ConferenceDTO otherConference = conference(ZonedDateTime.now().plusDays(3), ZonedDateTime.now().plusDays(4));
         when(conferenceRepository.findById(1)).thenReturn(Optional.of(
-                Conference.fromDTO(conferenceToUpdate)
+                ConferenceEntity.fromDTO(conferenceToUpdate)
         ));
         when(conferenceRepository.findAll()).thenReturn(
                 List.of(
-                        Conference.fromDTO(conferenceToUpdate, 1),
-                        Conference.fromDTO(otherConference, 2)
+                        ConferenceEntity.fromDTO(conferenceToUpdate, 1),
+                        ConferenceEntity.fromDTO(otherConference, 2)
                 )
         );
         assertThrows(ConferencesShouldNotIntersectException.class, () ->
@@ -122,7 +125,7 @@ public class ConferenceServiceTest {
     public void whenBusinessLogicRulesAreMetShouldUpdateConference() {
         ConferenceDTO conferenceToUpdate = conference(ZonedDateTime.now().plusDays(1), ZonedDateTime.now().plusDays(2));
         when(conferenceRepository.findById(1)).thenReturn(Optional.of(
-                Conference.fromDTO(conferenceToUpdate)
+                ConferenceEntity.fromDTO(conferenceToUpdate)
         ));
         when(conferenceRepository.findAll()).thenReturn(emptyList());
         underTest.updateConference(

@@ -11,7 +11,7 @@ import java.time.ZonedDateTime;
 @Getter
 @Setter
 @Entity(name = "conference")
-public class Conference {
+public class ConferenceEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,8 +24,8 @@ public class Conference {
     private ZonedDateTime endDateTime;
     private int participantsCount;
 
-    public static Conference fromDTO(ConferenceDTO conferenceDTO) {
-        Conference conference = new Conference();
+    public static ConferenceEntity fromDTO(ConferenceDTO conferenceDTO) {
+        ConferenceEntity conference = new ConferenceEntity();
         conference.setName(conferenceDTO.name());
         conference.setTopic(conferenceDTO.topic());
         conference.setStartDateTime(conferenceDTO.start());
@@ -34,13 +34,13 @@ public class Conference {
         return conference;
     }
 
-    public static Conference fromDTO(ConferenceDTO conferenceDTO, Integer id) {
-        Conference conference = fromDTO(conferenceDTO);
+    public static ConferenceEntity fromDTO(ConferenceDTO conferenceDTO, Integer id) {
+        ConferenceEntity conference = fromDTO(conferenceDTO);
         conference.setId(id);
         return conference;
     }
 
-    public boolean intersects(Conference other) {
+    public boolean intersects(ConferenceEntity other) {
         long leftIntersection = Math.min(this.endDateTime.toEpochSecond(), other.endDateTime.toEpochSecond());
         long rightIntersection = Math.max(this.startDateTime.toEpochSecond(), other.startDateTime.toEpochSecond());
         return leftIntersection > rightIntersection;
